@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garbage Compactor Status</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Garbage Compactor Status</h1>
+    </header>
+    <main>
+        <div id="status" class="status">Loading...</div>
+        <div class="buttons">
+            <button onclick="updateStatus('Empty')">Empty</button>
+            <button onclick="updateStatus('Half-Filled')">Half Filled</button>
+            <button onclick="updateStatus('Full')">Full</button>
+        </div>
+    </main>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js"></script>
+    <script>
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Reference to the status document
+        const statusDocRef = db.collection('status').doc('compactor');
+
+        // Get the current status
+        statusDocRef.onSnapshot((doc) => {
+            if (doc.exists) {
+                document.getElementById('status').innerText = doc.data().status;
+            } else {
+                document.getElementById('status').innerText = 'No status reported';
+            }
+        });
+
+        // Update status
+        function updateStatus(newStatus) {
+            statusDocRef.set({ status: newStatus });
+        }
+    </script>
+</body>
+</html>
