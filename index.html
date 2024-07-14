@@ -5,35 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Garbage Compactor Status</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Include Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-analytics.js"></script>
+    <!-- Include Firebase SDK (Modular version) -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js"></script>
     <script>
-      // Your web app's Firebase configuration
-      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-      const firebaseConfig = {
-        apiKey: "AIzaSyBQHxzj91cM9vLbiDyHIlR__DJCksAmbaI",
-        authDomain: "garbage-compactor-6dcba.firebaseapp.com",
-        projectId: "garbage-compactor-6dcba",
-        storageBucket: "garbage-compactor-6dcba.appspot.com",
-        messagingSenderId: "1078208227499",
-        appId: "1:1078208227499:web:e548ba874df00b02c46fee",
-        measurementId: "G-CXP5VJEQZ2"
-      };
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-      // Initialize Firebase
-      const app = firebase.initializeApp(firebaseConfig);
-      const analytics = firebase.analytics(); // Initialize analytics (optional)
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBQHxzj91cM9vLbiDyHIlR__DJCksAmbaI",
+  authDomain: "garbage-compactor-6dcba.firebaseapp.com",
+  databaseURL: "https://garbage-compactor-6dcba-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "garbage-compactor-6dcba",
+  storageBucket: "garbage-compactor-6dcba.appspot.com",
+  messagingSenderId: "1078208227499",
+  appId: "1:1078208227499:web:e548ba874df00b02c46fee",
+  measurementId: "G-CXP5VJEQZ2"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
       // Get a reference to Firestore
-      const db = firebase.firestore();
+      const db = getFirestore(app);
 
       // Reference to the status document
-      const statusDocRef = db.collection('status').doc('compactor');
+      const statusDocRef = doc(db, 'status', 'compactor');
 
       // Get the current status
-      statusDocRef.onSnapshot((doc) => {
-          if (doc.exists) {
+      onSnapshot(statusDocRef, (doc) => {
+          if (doc.exists()) {
               document.getElementById('status').innerText = doc.data().status;
           } else {
               document.getElementById('status').innerText = 'No status reported';
@@ -42,7 +50,7 @@
 
       // Update status
       function updateStatus(newStatus) {
-          statusDocRef.set({ status: newStatus })
+          setDoc(statusDocRef, { status: newStatus })
           .then(() => {
               console.log('Status updated successfully');
           })
