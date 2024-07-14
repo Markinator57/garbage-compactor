@@ -78,6 +78,13 @@ main {
     transform: scale(0.95);
 }
 
+.thank-you {
+color: grey;
+font-size: 0.9em;
+margin-top: 10px;
+text-align: center;
+}
+
 /* Responsive styling */
 @media (max-width: 600px) {
     .buttons {
