@@ -50,7 +50,7 @@ const analytics = getAnalytics(app);
       });
 
       // Update status
-      function updateStatus(newStatus) {
+     window.updateStatus = function(newStatus) {
           setDoc(statusDocRef, { status: newStatus })
           .then(() => {
               console.log('Status updated successfully');
