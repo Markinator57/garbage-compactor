@@ -85,10 +85,10 @@ margin-top: 10px;
 text-align: center;
 }
 
-#timestamp {
-color: #666;
-font-size: 14px;
-margin-top: 10px;
+.timestamp {
+    font-size: 0.8em;
+    color: #666;
+    margin-bottom: 20px; /* Adds space between the timestamp and the buttons */
 }
 
 /* Responsive styling */
