@@ -57,7 +57,7 @@
             setDoc(statusDocRef, { 
                 status: newStatus,
                 timestamp: serverTimestamp()
-            })
+            }, { merge: true })
             .then(() => {
                 console.log('Status updated successfully');
                 showThankYouMessage();
@@ -73,20 +73,6 @@
             thankYouMessage.style.display = 'block';
         }
     </script>
-    <style>
-        /* Additional styles for thank you message */
-        #thank-you-message {
-            display: none;
-            color: #666;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-        #timestamp {
-            color: #666;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-    </style>
 </head>
 <body>
     <header>
