@@ -14,14 +14,14 @@
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
-          apiKey: "AIzaSyBQHxzj91cM9vLbiDyHIlR__DJCksAmbaI",
-          authDomain: "garbage-compactor-6dcba.firebaseapp.com",
-          databaseURL: "https://garbage-compactor-6dcba-default-rtdb.europe-west1.firebasedatabase.app",
-          projectId: "garbage-compactor-6dcba",
-          storageBucket: "garbage-compactor-6dcba.appspot.com",
-          messagingSenderId: "1078208227499",
-          appId: "1:1078208227499:web:e548ba874df00b02c46fee",
-          measurementId: "G-CXP5VJEQZ2"
+          apiKey: "your-api-key",
+          authDomain: "your-auth-domain",
+          databaseURL: "your-database-url",
+          projectId: "your-project-id",
+          storageBucket: "your-storage-bucket",
+          messagingSenderId: "your-messaging-sender-id",
+          appId: "your-app-id",
+          measurementId: "your-measurement-id"
         };
 
         // Initialize Firebase
@@ -34,10 +34,12 @@
         // Reference to the status document
         const statusDocRef = doc(db, 'status', 'compactor');
 
-        // Get the current status
+        // Get the current status and timestamp
         onSnapshot(statusDocRef, (doc) => {
             if (doc.exists()) {
-                document.getElementById('status').innerText = doc.data().status;
+                const data = doc.data();
+                document.getElementById('status').innerText = data.status;
+
                 if (data.timestamp) {
                     const date = data.timestamp.toDate();
                     document.getElementById('timestamp').innerText = `Last updated: ${date.toLocaleString()}`;
@@ -50,18 +52,41 @@
             }
         });
 
-        // Update status
+        // Update status and set timestamp
         window.updateStatus = function(newStatus) {
-            setDoc(statusDocRef, { status: newStatus })
+            setDoc(statusDocRef, { 
+                status: newStatus,
                 timestamp: serverTimestamp()
+            })
             .then(() => {
                 console.log('Status updated successfully');
+                showThankYouMessage();
             })
             .catch((error) => {
                 console.error('Error updating status: ', error);
             });
         }
+
+        // Function to show thank you message
+        function showThankYouMessage() {
+            const thankYouMessage = document.getElementById('thank-you-message');
+            thankYouMessage.style.display = 'block';
+        }
     </script>
+    <style>
+        /* Additional styles for thank you message */
+        #thank-you-message {
+            display: none;
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        #timestamp {
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -75,7 +100,9 @@
             <button onclick="updateStatus('Half-Filled')">Half Filled</button>
             <button onclick="updateStatus('Full')">Full</button>
         </div>
-        <div class="thank-you">Thanks for checking on, and updating the state of the garbage compactor responsibly for a better dorm :)</div>
+        <div id="thank-you-message">
+            Thanks for checking on, and updating the state of the garbage compactor responsibly for a better dorm :)
+        </div>
     </main>
 </body>
 </html>
