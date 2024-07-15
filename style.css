@@ -85,6 +85,12 @@ margin-top: 10px;
 text-align: center;
 }
 
+#timestamp {
+color: #666;
+font-size: 14px;
+margin-top: 10px;
+}
+
 /* Responsive styling */
 @media (max-width: 600px) {
     .buttons {
