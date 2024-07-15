@@ -10,7 +10,7 @@
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-analytics.js";
-        import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -38,14 +38,22 @@
         onSnapshot(statusDocRef, (doc) => {
             if (doc.exists()) {
                 document.getElementById('status').innerText = doc.data().status;
+                if (data.timestamp) {
+                    const date = data.timestamp.toDate();
+                    document.getElementById('timestamp').innerText = `Last updated: ${date.toLocaleString()}`;
+                } else {
+                    document.getElementById('timestamp').innerText = 'No timestamp available';
+                }
             } else {
                 document.getElementById('status').innerText = 'No status reported';
+                document.getElementById('timestamp').innerText = '';
             }
         });
 
         // Update status
         window.updateStatus = function(newStatus) {
             setDoc(statusDocRef, { status: newStatus })
+                timestamp: serverTimestamp()
             .then(() => {
                 console.log('Status updated successfully');
             })
@@ -61,6 +69,7 @@
     </header>
     <main>
         <div id="status" class="status">Loading...</div>
+        <div id="timestamp" class="timestamp"></div>
         <div class="buttons">
             <button onclick="updateStatus('Empty')">Empty</button>
             <button onclick="updateStatus('Half-Filled')">Half Filled</button>
