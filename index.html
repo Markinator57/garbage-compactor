@@ -37,7 +37,9 @@
         // Get the current status
         onSnapshot(statusDocRef, (doc) => {
             if (doc.exists()) {
-                document.getElementById('status').innerText = doc.data().status;
+                const data = doc.data();
+                document.getElementById('status').innerText = data.status;
+
                 if (data.timestamp) {
                     const date = data.timestamp.toDate();
                     document.getElementById('timestamp').innerText = `Last updated: ${date.toLocaleString()}`;
@@ -52,8 +54,7 @@
 
         // Update status
         window.updateStatus = function(newStatus) {
-            setDoc(statusDocRef, { status: newStatus })
-                timestamp: serverTimestamp()
+            setDoc(statusDocRef, { status: newStatus, timestamp: serverTimestamp() })
             .then(() => {
                 console.log('Status updated successfully');
             })
